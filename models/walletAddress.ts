@@ -7,6 +7,7 @@ import { IWalletAddressInfo } from "../service/interfaces";
 
 const WalletAddressInfoSchema = new Schema(
   {
+    walletGroupName: { type: String },
     walletName: { type: String },
     walletAddress: { type: String },
     network: { type: String },
