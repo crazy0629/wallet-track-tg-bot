@@ -1,5 +1,13 @@
-import { deleteModel } from "mongoose";
 import UserInfo from "../models/user";
+
+export const getAllUserIdLists = async () => {
+  try {
+    const models = await UserInfo.find();
+    return models;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const saveUserId = async (chatId: number) => {
   try {
