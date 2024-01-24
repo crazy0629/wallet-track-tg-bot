@@ -593,7 +593,6 @@ export const walletList = [
     walletAddress: "0xe93C974908003faddfOBd972b05b6494368D3F5",
     network: "ETHEREUM",
   },
-
   {
     walletGroupName: "Top ETH Holders",
     walletName: "ETH WHALE 35",
