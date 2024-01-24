@@ -16,7 +16,7 @@ export const saveUserId = async (chatId: number) => {
       const result = {
         success: false,
         message:
-          "User was already subscribed to Me! I will send you new update!",
+          "Thank you for your subscription! You will get notifications soon!",
       };
       return result;
     }
@@ -26,7 +26,7 @@ export const saveUserId = async (chatId: number) => {
     const result = {
       success: true,
       message:
-        "Thank you for your interest!, User is successfully subscribed to Me!",
+        "Thank you for your subscription! You will get notifications soon!",
     };
     return result;
   } catch (error) {
@@ -44,14 +44,14 @@ export const removeUserId = async (chatId: number) => {
     if (model == null) {
       const result = {
         success: false,
-        message: "You had not subscribed to me! Thank you!",
+        message: "You haven't subscribed! Thank you!",
       };
       return result;
     }
     const deletedModel = await UserInfo.deleteOne({ userId: chatId });
     const result = {
       success: true,
-      message: "Okay, no worries. We will stop sending you notification",
+      message: "Okay, no worries. You won't get notifications anymore!",
     };
     return result;
   } catch (error) {

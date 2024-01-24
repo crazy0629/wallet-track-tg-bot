@@ -14,46 +14,45 @@ const bot = new Bot(process.env.BOT_TOKEN);
 bot.api.config.use(autoRetry());
 
 bot.command("start", async (ctx) => {
-  ctx.reply("Welcome to my bot! Use /choose to see the notification option.");
   const chatId = ctx.chat.id;
   await sendStartScreen(chatId);
+  await saveUserId(chatId);
 });
 
 const sendStartScreen = async (chatId) => {
   const caption =
-    "$BO - Wallet Sniffer\n\n" +
-    "Utility Meme\n" +
+    "<b>$BO - Wallet Sniffer</b>\n\n" +
+    "<b>Utility Meme</b>\n" +
     "Bo spends his days mingling with the elite.\n" +
     "Political figures, celebrities, world-class sportsman and high calibre\n" +
     "crypto influencers are no strangers to Bo.\n\n" +
-    "Bo-Bot Wallet Sniffer 💸🐕‍🦺\n" +
+    "<b>Bo-Bot Wallet Sniffer 💸🐕‍🦺</b>\n" +
     "Get informed about live trades from all the top dogs in crypto, copy\n" +
     "trading and whale wallet tracking accessible on telegram, Let Bo do\n" +
     "the sniffing around so you can be more informed about market\n" +
     "manipulations and insider trading.\n\n" +
-    "Hold at least 350 $BO to use the Bo-Bot Wallet Sniffer.\n\n" +
-    "-----------------------------\n" +
+    "<b>Hold at least 350 $BO to use the Bo-Bot Wallet Sniffer.</b>\n\n" +
+    "<b>-----------------------------</b>\n" +
     "Bwdg9Md8JV9Da3gESe79YJk9Aeg5M7jVqvRDdPNhbjP2\n" +
-    "-----------------------------\n\n" +
-    "<a href='https://bowalletsniffer.com/'>Website</a>\n" +
-    "<a href='https://www.dextools.io/app/en/solana/pair-explorer/4VBJXK9zHFj6UPotD918eMFp1zuyJqyioGFqVVAxrdVc'>DexTools</a>\n" +
-    "<a href='https://t.me/BoWalletSniffer'>Telegram</a>\n" +
-    "<a href='https://t.me/WalletSnifferBoBot'>Bo-Bot</a>\n\n" +
-    "This ones for Bo, This ones for Freedom";
+    "<b>-----------------------------</b>\n\n" +
+    "<a href='https://bowalletsniffer.com/'><b>Website</b></a>\n" +
+    "<a href='https://www.dextools.io/app/en/solana/pair-explorer/4VBJXK9zHFj6UPotD918eMFp1zuyJqyioGFqVVAxrdVc'><b>DexTools</b></a>\n" +
+    "<a href='https://t.me/BoWalletSniffer'><b>Telegram</b></a>\n" +
+    "<a href='https://t.me/WalletSnifferBoBot'><b>Bo-Bot</b></a>\n\n" +
+    "This ones for Bo, This ones for Freedom 🇺🇸";
   await sendPhoto(chatId, "https://imgur.com/a/Rwa6kgz", caption);
 };
 
-bot.command("choose", (ctx) => {
+bot.command("option", (ctx) => {
   const menu = new InlineKeyboard()
     .text("Yes", "yesOption")
     .text("No", "noOption")
     .row()
     .text("About", "about");
 
-  ctx.reply(
-    "Are you going to get notification from me about token amount changes?",
-    { reply_markup: menu }
-  );
+  ctx.reply("Do you want to subscribe to get notifications?", {
+    reply_markup: menu,
+  });
 });
 
 bot.callbackQuery("yesOption", async (ctx) => {
@@ -70,44 +69,23 @@ bot.callbackQuery("noOption", async (ctx) => {
   ctx.reply(result?.message);
 });
 
-bot.callbackQuery("about", (ctx) => {
+bot.callbackQuery("about", async (ctx) => {
+  const chatId = ctx.chat.id;
   ctx.answerCallbackQuery();
-  ctx.reply(
-    "This is a simple Telegram bot that lets users about token amount change for listed wallets!."
-  );
+  await sendStartScreen(chatId);
 });
 
 bot.command("message", async (ctx) => {
   const chatMessage = ctx.message.text;
   const chatId = ctx.chat.id;
-
-  if (chatMessage.slice(9) == "hi") {
-    await sendPhoto(
-      chatId,
-      "https://imgur.com/a/Rwa6kgz",
-      "NEW TRANSACTION DETECTED \n\n" +
-        "🏢 Assets Manager 🏢 " +
-        "\n\n" +
-        "👤 Blackrock \n" +
-        "💵 Bought: $12,457,704 (300 BTC) \n" +
-        "▶️ Price: $41,533.29 \n" +
-        "🪙 Holdings: $4,982,842,800 (120,000 BTC) \n\n" +
-        "Transaction: \n" +
-        "0f9da66c1f93a690ae00550fedf24bfa16df44db47ec219f597d762953c2d93c\n" +
-        "..................................................\n\n" +
-        "Sniffed out by Bo-Bot!\n" +
-        "Website | Telegram | Twitter | DexTools"
-    );
-    ctx.reply("Broadcast completed");
-  }
 });
 
 const setMenu = async () => {
   await bot.api.setMyCommands([
     { command: "start", description: "Start the bot." },
     {
-      command: "choose",
-      description: "Choose whether you are going to get notification or not.",
+      command: "option",
+      description: "Config your subscription.",
     },
   ]);
 };
@@ -140,23 +118,23 @@ export const notifyUser = async (
 ) => {
   const chatIdLists = await getAllUserIdLists();
   const linkText =
-    "<a href='https://bowalletsniffer.com/'>Website</a> | <a href='https://t.me/BoWalletSniffer'>Telegram</a> | <a href='https://x.com/BoWalletSniffer'>Twitter</a> | <a href='https://www.dextools.io/app/en/solana/pair-explorer/4VBJXK9zHFj6UPotD918eMFp1zuyJqyioGFqVVAxrdVc'>DexTools</a>";
+    "<b><a href='https://bowalletsniffer.com/'>Website</a> | <a href='https://t.me/BoWalletSniffer'>Telegram</a> | <a href='https://x.com/BoWalletSniffer'>Twitter</a> | <a href='https://www.dextools.io/app/en/solana/pair-explorer/4VBJXK9zHFj6UPotD918eMFp1zuyJqyioGFqVVAxrdVc'>DexTools</a></b>";
   const caption =
-    "NEW TRANSACTION DETECTED \n\n" +
-    `🏢 ${groupName} 🏢 ` +
+    "<b>NEW TRANSACTION DETECTED</b> \n\n" +
+    `<b>🏢 ${groupName} 🏢 </b>` +
     "\n\n" +
-    `👤 ${walletName} \n` +
-    `💵 ${inOut}: ${changeUSDPrice} (${changeAmount} ${tokenSymbol}) \n` +
-    `▶️ Price: ${tokenPrice} \n` +
-    `🪙 Holdings: $${currentUSDPrice} (${currentAmount} ${tokenSymbol}) \n\n` +
-    "Transaction: \n" +
-    `${transactionHash}\n` +
+    `<b>👤 ${walletName} </b>\n` +
+    `<b>💵 ${inOut}: ${changeUSDPrice} (${changeAmount} ${tokenSymbol})</b> \n` +
+    `<b>▶️ Price: ${tokenPrice}</b> \n` +
+    `<b>🪙 Holdings: $${currentUSDPrice} (${currentAmount} ${tokenSymbol})</b> \n\n` +
+    "<b>Transaction:</b> \n" +
+    `<b><a href='https://etherscan.io/tx/${transactionHash}'>${transactionHash}</a></b>\n` +
     "..................................................\n\n" +
-    "Sniffed out by Bo-Bot!\n" +
+    "Sniffed out <b>by Bo-Bot!</b>\n" +
     linkText;
 
   if (chatIdLists?.length == 0) return;
-  chatIdLists?.forEach(async (chatId) => {
-    await sendPhoto(chatId.userId, "https://imgur.com/a/Rwa6kgz", caption);
+  chatIdLists?.forEach((chatId) => {
+    sendPhoto(chatId.userId, "https://imgur.com/a/Rwa6kgz", caption);
   });
 };

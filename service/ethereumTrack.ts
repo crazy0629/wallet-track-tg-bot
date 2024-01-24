@@ -52,8 +52,8 @@ const getTokenPrice = async (
         { headers: { "X-API-Key": process.env.DEXTOOL_KEY as string } }
       )
     ).json()) as any;
+    if (dextoolsData.data == null || dextoolsData.data == undefined) return;
     const tokenPrice = dextoolsData.data.reprPair.price;
-
     const tokenContractConfig = {
       address: tokenAddress,
       abi: erc20Abi,
@@ -93,7 +93,6 @@ const getTokenPrice = async (
     const walletName = ethAddressList.filter(
       (item) => item.walletAddress == walletAddress
     )[0].walletName;
-
     notifyUser(
       groupName,
       walletName,
@@ -106,6 +105,7 @@ const getTokenPrice = async (
       currentUsdPrice,
       txHash
     );
+    console.log("-------------------Token Change-------------");
   } catch (error) {
     console.error("Error fetching token data from Ethplorer:", error);
   }
@@ -149,18 +149,20 @@ const handleEthAmountChange = async (
     currentUsdPrice,
     txHash
   );
+  console.log("-------------------ETH Change-------------");
 };
 
 export const getEthereumWalletAddressList = async () => {
   ethAddressList = await getAllEthereumWalletAddressList();
-  //   ethAddressList = [
-  //     {
-  //       walletGroupName: "AAAA",
-  //       walletName: "BBBB",
-  //       walletAddress: "0x75e89d5979e4f6fba9f97c104c2f0afb3f1dcb88",
-  //       network: "ETHEREUM",
-  //     },
-  //   ];
+  ethAddressList = [
+    ...ethAddressList,
+    {
+      walletGroupName: "Test",
+      walletName: "MEXC hot wallet",
+      walletAddress: "0x75e89d5979e4f6fba9f97c104c2f0afb3f1dcb88",
+      network: "ETHEREUM",
+    },
+  ];
 };
 
 const checkIfWalletExists = (walletAddress) => {
